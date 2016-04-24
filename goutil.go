@@ -38,18 +38,36 @@ func JSONcompare(expectation, result interface{}) bool {
 	return true
 }
 
-func DownloadURL(urlData url.URL) (data string, err error) {
-	return Download(urlData.String())
+func DownloadURL(urlData url.URL) (data string, err error) { return download(urlData.String(), true) }
+
+func DownloadURLNoRedirect(urlData url.URL) (data string, err error) {
+	return download(urlData.String(), false)
 }
 
 // Download retrieves data from the specified HTTP address.
-func Download(url string) (data string, err error) {
+func Download(url string) (data string, err error) { return download(url, true) }
+
+func download(url string, allowRedirect bool) (data string, err error) {
+	var redirectHandler func(req *http.Request, via []*http.Request) error
+	if !allowRedirect {
+		redirectHandler = func(req *http.Request, via []*http.Request) error {
+			return errors.New("Redirects are not allowed.")
+		}
+	}
+	var dlClient = http.Client{CheckRedirect: redirectHandler}
+
 	var resp *http.Response
-	resp, err = http.Get(url)
+	resp, err = dlClient.Get(url)
 	if err == nil {
 		defer resp.Body.Close()
-		readallContents, _ := ioutil.ReadAll(resp.Body)
-		data = string(readallContents)
+		var status = resp.StatusCode
+		if status == 200 {
+			var readallContents, _ = ioutil.ReadAll(resp.Body)
+			data = string(readallContents)
+		} else {
+			err = errors.New(fmt.Sprintf("Received status code: %d", status))
+		}
+
 	}
 	return data, err
 }
