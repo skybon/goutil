@@ -62,3 +62,31 @@ func GetFloatP(data string) (floatP *float64) {
 
 	return floatP
 }
+
+func FieldsToMap(header []string, records [][]string) []map[string]string {
+	var outMap = make([]map[string]string, 0, len(records))
+
+	var hLen = len(header)
+
+	for _, record := range records {
+		var fieldNum int
+
+		var recLen = len(record)
+
+		if hLen > recLen {
+			fieldNum = recLen
+		} else {
+			fieldNum = hLen
+		}
+		var newMap = make(map[string]string, fieldNum)
+		for i := 0; i < fieldNum; i++ {
+			var k = header[i]
+			if k != "" {
+				newMap[k] = record[i]
+			}
+		}
+		outMap = append(outMap, newMap)
+	}
+
+	return outMap
+}
