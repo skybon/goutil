@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 var ErrMismatch = errors.New("Mismatch")
@@ -51,4 +52,13 @@ func Download(url string) (data string, err error) {
 		data = string(readallContents)
 	}
 	return data, err
+}
+
+func GetFloatP(data string) (floatP *float64) {
+	var v, vErr = strconv.ParseFloat(data, 64)
+	if vErr == nil {
+		floatP = &v
+	}
+
+	return floatP
 }
