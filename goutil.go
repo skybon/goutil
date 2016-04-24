@@ -10,6 +10,7 @@ import (
 )
 
 var ErrMismatch = errors.New("Mismatch")
+var ErrPanic = errors.New("Procedure panic")
 
 func ErrorOut(err error, expectation, result interface{}) string {
 	return fmt.Sprintf("Error: %s\nExpected %#v\nReceived %#v\n", err.Error(), expectation, result)
