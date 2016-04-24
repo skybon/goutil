@@ -26,6 +26,17 @@ func SprintfCompare(expectation, result interface{}) bool {
 	return fmt.Sprintf("%#v", expectation) == fmt.Sprintf("%#v", result)
 }
 
+func JSONcompare(expectation, result interface{}) bool {
+	var e, _ = json.Marshal(expectation)
+	var r, _ = json.Marshal(result)
+
+	if string(e) != string(r) {
+		return false
+	}
+
+	return true
+}
+
 func DownloadURL(urlData url.URL) (data string, err error) {
 	return Download(urlData.String())
 }
