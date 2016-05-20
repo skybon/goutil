@@ -72,13 +72,32 @@ func download(url string, allowRedirect bool) (data string, err error) {
 	return data, err
 }
 
-func GetFloatP(data string) (floatP *float64) {
-	var v, vErr = strconv.ParseFloat(data, 64)
+func GetIntP(data string) (p *int) {
+	var t, vErr = strconv.ParseInt(data, 10, 64)
 	if vErr == nil {
-		floatP = &v
+		var v = int(t)
+		p = &v
 	}
 
-	return floatP
+	return p
+}
+
+func GetInt64P(data string) (p *int64) {
+	var v, vErr = strconv.ParseInt(data, 10, 64)
+	if vErr == nil {
+		p = &v
+	}
+
+	return p
+}
+
+func GetFloatP(data string) (p *float64) {
+	var v, vErr = strconv.ParseFloat(data, 64)
+	if vErr == nil {
+		p = &v
+	}
+
+	return p
 }
 
 func FieldsToMap(header []string, records [][]string) []map[string]string {
