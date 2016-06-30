@@ -72,6 +72,10 @@ func download(url string, allowRedirect bool) (data string, err error) {
 	return data, err
 }
 
+func IntP(i int) *int {
+	return &i
+}
+
 func GetIntP(data string) (p *int) {
 	var t, vErr = strconv.ParseInt(data, 10, 64)
 	if vErr == nil {
