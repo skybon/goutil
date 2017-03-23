@@ -131,3 +131,20 @@ func FieldsToMap(header []string, records [][]string) []map[string]string {
 
 	return outMap
 }
+
+type Document map[string]interface{}
+
+func (self *Document) ToValue(factory func() interface{}) (interface{}, error) {
+	var s, merr = json.Marshal(self)
+	if merr != nil {
+		return nil, merr
+	}
+
+	var v = factory()
+	var umerr = json.Unmarshal(s, v)
+	if umerr != nil {
+		return nil, umerr
+	}
+
+	return v, nil
+}
